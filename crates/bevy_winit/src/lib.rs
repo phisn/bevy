@@ -292,8 +292,14 @@ pub fn winit_runner(mut app: App) {
     };
 
     trace!("starting winit event loop");
-    // TODO(clean): the winit docs mention using `spawn` instead of `run` on WASM.
+    
+    #[cfg(not(target_arch = "wasm32"))]
     if let Err(err) = event_loop.run(event_handler) {
+        error!("winit event loop returned an error: {err}");
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    if let Err(err) = event_loop.spawn(event_handler) {
         error!("winit event loop returned an error: {err}");
     }
 }
