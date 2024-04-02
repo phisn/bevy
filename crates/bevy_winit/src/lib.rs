@@ -16,6 +16,7 @@ use bevy_a11y::AccessibilityRequested;
 use bevy_utils::{Duration, Instant};
 use system::{changed_windows, create_windows, despawn_windows, CachedWindow};
 use winit::dpi::{LogicalSize, PhysicalSize};
+use winit::platform::web::EventLoopWindowTargetExtWebSys;
 pub use winit_config::*;
 pub use winit_windows::*;
 
@@ -301,9 +302,7 @@ pub fn winit_runner(mut app: App) {
     #[cfg(target_arch = "wasm32")]
     {
         use winit::platform::web::EventLoopExtWebSys;
-        if let Err(err) = event_loop.spawn(event_handler) {
-            error!("winit event loop returned an error: {err}");
-        }
+        event_loop.spawn(event_handler);
     }
 }
 
